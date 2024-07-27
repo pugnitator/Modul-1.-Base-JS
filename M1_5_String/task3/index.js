@@ -1,2 +1,3 @@
 let userName = prompt('Как вас зовут?').toLocaleLowerCase().trim();
-alert(`Вас зовут ${userName}`);
+let userAge = Number(prompt('Сколько вам лет?').trim());
+alert(`Вас зовут ${userName} и вам ${userAge} лет`);
