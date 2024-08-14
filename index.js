@@ -11,7 +11,7 @@ console.log(giveTalonsInOrder(people, ordersArr));
 function giveTalonsInOrder(patients, orders){
 let sortPeople = [];
 for (let item of orders) {
-    sortPeople.push(people.find((patient) => patient.id === item))
+    sortPeople.push(patients.find((patient) => patient.id === item))
 }
 return sortPeople;
 }
