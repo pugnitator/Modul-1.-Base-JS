@@ -17,6 +17,7 @@ const bird = {
 console.log(makeDomestic.bind(dog, true)()); 
 
 console.log(makeDomestic.call(bird, false)); 
+console.log(makeDomestic.apply(bird, [false])); 
 
 
 function makeDomestic(isDomestic) {
