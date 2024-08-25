@@ -23,20 +23,43 @@ class Dictionary {
    }
 
    showAllWords() {
-      // console.log(Object.entries(this.words))
       Object.values(this.words).forEach((word) => console.log(`${word.word} - ${word.description}`));
    }
 }
 
+// Задание 4
+class HardWordsDictionary extends Dictionary {
+   constructor(name) {
+      super(name);
+   }
 
-const dictionary = new Dictionary('Толковый словарь');
-dictionary.add('JavaScript', 'популярный язык программирования');
-console.log(dictionary.get('JavaScript'));
+   add(word, description) {
+      if(word in this.words) console.log('такое слово уже есть в словаре');
+      else {
+         this.words[word] = {
+            word: `${word}`,
+            description: `${description}`,
+            isDifficalt: true,
+         }
+      }
+   }
 
-dictionary.add('Веб-разработчик', 'Человек, который создает новые сервисы и сайты или поддерживает и дополняет существующие');
-console.log(dictionary.get('Веб-разработчик'));
+}
 
-// dictionary.remove('JavaScript');
+const hardWordsDictionary = new HardWordsDictionary('Сложные слова');
+    
+hardWordsDictionary.add('дилетант', 'Тот, кто занимается наукой или искусством без специальной подготовки, обладая только поверхностными знаниями.'); 
+hardWordsDictionary.add('неологизм', 'Новое слово или выражение, а также новое значение старого слова.'); 
+hardWordsDictionary.add('квант', 'Неделимая часть какой-либо величины в физике.'); 
 
-dictionary.showAllWords();
+console.log(hardWordsDictionary);
+    
+// hardWordsDictionary.remove('неологизм');
+console.log(hardWordsDictionary);
+
+hardWordsDictionary.showAllWords();
+
+
+
+
 
