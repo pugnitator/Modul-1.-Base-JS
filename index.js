@@ -24,25 +24,40 @@ tasksCard.forEach((element) => {
     body.insertAdjacentHTML('beforeend', element)
 })
 
-// новый код <----
+// код из модуля 15
 const createTaskBlockForm = document.querySelector('.create-task-block');
 
 createTaskBlockForm.addEventListener('submit', (event) => {
     event.preventDefault();
+
+    const errorBlock = document.querySelector('.error-message-block');
+    if (errorBlock != null) errorBlock.remove();
+    
     const taskText = event.target.taskName.value;
-    const newTaskId = String(Number(tasks[tasks.length - 1].id) + 1)
+    if(taskText === '') {
+        addErrorToForm('Название задачи не должно быть пустым');
+    } else if(tasks.some((element) => element.text === taskText)) {
+        addErrorToForm('Задача с таким названием уже существует');
+    } else {
+        const newTaskId = String(Number(tasks[tasks.length - 1].id) + 1);
+        const newTask = {
+            id: `${newTaskId}`,
+            completed: false,
+            text: `${taskText}`
+        };
+        tasks.push(newTask);
 
-    const newTask = {
-        id: `${newTaskId}`,
-        completed: false,
-        text: `${taskText}`
-    };
-    tasks.push(newTask);
-    // console.log(newTask);
-
-    body.insertAdjacentHTML('beforeend', convertTaskToHTML(newTask))
+        body.insertAdjacentHTML('beforeend', convertTaskToHTML(newTask))
+    }
 })
 
+function addErrorToForm(errorText) {
+    const errorSpan = document.createElement('span');
+    errorSpan.className = 'error-message-block';
+    errorSpan.textContent = errorText;
+
+    document.querySelector('.create-task-block').insertAdjacentElement('afterbegin', errorSpan);
+}
 
 // код из модуля 14
 function convertTaskToHTML(task) {
