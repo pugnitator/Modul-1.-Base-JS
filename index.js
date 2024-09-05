@@ -18,13 +18,15 @@ const tasks = [
 ];
 
 const body = document.querySelector('body');
+const taskListBlock = body.querySelector('.tasks-list');
 const tasksCard = tasks.map((element) => convertTaskToHTML(element));
 
 tasksCard.forEach((element) => {
-    body.insertAdjacentHTML('beforeend', element)
+    taskListBlock.insertAdjacentHTML('beforeend', element)
 })
 
 // код из модуля 15
+// форма создания задач
 const createTaskBlockForm = document.querySelector('.create-task-block');
 
 createTaskBlockForm.addEventListener('submit', (event) => {
@@ -39,7 +41,7 @@ createTaskBlockForm.addEventListener('submit', (event) => {
     } else if(tasks.some((element) => element.text === taskText)) {
         addErrorToForm('Задача с таким названием уже существует');
     } else {
-        const newTaskId = String(Number(tasks[tasks.length - 1].id) + 1);
+        const newTaskId = tasks.length === 0 ? '100' : String(Number(tasks[tasks.length - 1].id) + 1);
         const newTask = {
             id: `${newTaskId}`,
             completed: false,
@@ -47,9 +49,60 @@ createTaskBlockForm.addEventListener('submit', (event) => {
         };
         tasks.push(newTask);
 
-        body.insertAdjacentHTML('beforeend', convertTaskToHTML(newTask))
+        taskListBlock.insertAdjacentHTML('beforeend', convertTaskToHTML(newTask))
     }
 })
+
+//работа с удалением
+taskListBlock.addEventListener('click', (event) => {
+        if(event.target.className === 'task-item__delete-button default-button delete-button') {
+            const task = event.target.closest('.task-item');
+            const deleteModal = displayDeleteModal();
+            useDeleteModal(deleteModal, task);
+        }
+    }
+);
+
+function displayDeleteModal(){
+    const deleteModalHTML = `
+        <div class="modal-overlay">
+            <div class="delete-modal">
+                <h3 class="delete-modal__question">
+                    Вы действительно хотите удалить эту задачу?
+                </h3>
+                <div class="delete-modal__buttons">
+                    <button class="delete-modal__button delete-modal__cancel-button">
+                        Отмена
+                    </button>
+                    <button class="delete-modal__button delete-modal__confirm-button">
+                        Удалить
+                    </button>
+                </div>
+            </div>
+        </div>
+    `
+    body.insertAdjacentHTML('beforeend', deleteModalHTML);
+    return body.querySelector('.modal-overlay');
+}
+
+
+function useDeleteModal(deleteModal, task) {
+    deleteModal.addEventListener('click', (event) => {
+        if (event.target.className === 'delete-modal__button delete-modal__cancel-button') {
+            deleteModal.className = 'modal-overlay_hidden';
+        } else if (event.target.className === 'delete-modal__button delete-modal__confirm-button') {
+            //удаляем элемент с экрана
+            task.remove();
+            deleteModal.className = 'modal-overlay_hidden';
+            //удаляем элемент из массива
+            const taskId = task.getAttribute('data-task-id');
+            console.log(taskId);
+            tasks.splice(tasks.findIndex((item) => item.id === taskId), 1);
+            // console.log(taskId, tasks);
+            
+        }
+    })
+}
 
 function addErrorToForm(errorText) {
     const errorSpan = document.createElement('span');
