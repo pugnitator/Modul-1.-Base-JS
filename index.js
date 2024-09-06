@@ -1,4 +1,3 @@
-// код из модуля 14
 const tasks = [
     {
         id: '1138465078061',
@@ -20,16 +19,17 @@ const tasks = [
 const body = document.querySelector('body');
 const taskListBlock = body.querySelector('.tasks-list');
 const tasksCard = tasks.map((element) => convertTaskToHTML(element));
+const taskBlockForm = document.querySelector('.create-task-block');
 
 tasksCard.forEach((element) => {
     taskListBlock.insertAdjacentHTML('beforeend', element)
 })
 
-// код из модуля 15
-// форма создания задач
-const createTaskBlockForm = document.querySelector('.create-task-block');
+body.addEventListener('keydown', (event) => {
+    if (event.key.toLowerCase() === 'tab') changeTheme(body);
+})
 
-createTaskBlockForm.addEventListener('submit', (event) => {
+taskBlockForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const errorBlock = document.querySelector('.error-message-block');
@@ -53,7 +53,6 @@ createTaskBlockForm.addEventListener('submit', (event) => {
     }
 })
 
-//работа с удалением
 taskListBlock.addEventListener('click', (event) => {
         if(event.target.className === 'task-item__delete-button default-button delete-button') {
             const task = event.target.closest('.task-item');
@@ -85,7 +84,6 @@ function displayDeleteModal(){
     return body.querySelector('.modal-overlay');
 }
 
-
 function useDeleteModal(deleteModal, task) {
     deleteModal.addEventListener('click', (event) => {
         if (event.target.className === 'delete-modal__button delete-modal__cancel-button') {
@@ -112,7 +110,35 @@ function addErrorToForm(errorText) {
     document.querySelector('.create-task-block').insertAdjacentElement('afterbegin', errorSpan);
 }
 
-// код из модуля 14
+function changeTheme(body) {
+    const isNightThemeNow = body.getAttribute('data-current-theme') === 'nightTheme';
+    console.log(isNightThemeNow, body.getAttribute('data-current-theme'))
+
+    if (isNightThemeNow) {
+        console.log('да');
+        document.querySelectorAll('[data-current-theme = "nightTheme"]').forEach(element => {
+            element.removeAttribute('style');
+            element.removeAttribute('data-current-theme')
+        })
+
+    } else {
+        console.log('нет')
+        body.setAttribute('data-current-theme', 'nightTheme');
+        body.setAttribute('style', `background: #24292E;`);
+
+        body.querySelectorAll('.task-item').forEach((element) => {
+            element.setAttribute('data-current-theme', 'nightTheme');
+            element.setAttribute('style', 'color: #ffffff;')
+        });
+        body.querySelectorAll('button').forEach((element) => {
+            element.setAttribute('data-current-theme', 'nightTheme');
+            element.setAttribute('style', 'border: 1px solid #ffffff;')
+        }); 
+
+        console.log(body);
+    }
+}
+
 function convertTaskToHTML(task) {
     return `
         <div class="task-item" data-task-id="${task.id}">
