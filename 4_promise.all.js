@@ -1,7 +1,5 @@
 getUsers();
 
-
-
 function getUsers() {
     const USER_LIST_URL = 'https://jsonplaceholder.typicode.com/users';
     const getUsersResult = fetch(USER_LIST_URL);
@@ -14,18 +12,19 @@ function getUsers() {
     })
     .then((users) => {
         switchLoader();
-        setTimeout(() => {
-            console.log(users)
+        console.log('я второй then до setTimeout')
+        // setTimeout(() => {
+            console.log('я второй then')
             users.forEach(user => {
                 const userList = document.querySelector('#data-container');
                 const userElement = createUserElement(user);
                 userList.append(userElement);
             });
-        }, 3000);
+        // }, 3000);
     })
     .catch((error) => console.log('error', error))
     .finally(() => {
-        console.log('Я тут')
+        console.log('Я finally')
         switchLoader()
     })
     
